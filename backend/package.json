@@ -1,0 +1,42 @@
+{
+    "$schema": "https://www.schemastore.org/package.json",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite",
+        "node:service": "node server.js",
+        "node:service:dev": "node --watch server.js",
+        "dev:full": "concurrently \"npm run dev\" \"npm run node:service:dev\"",
+        "seed": "node prisma/seed.js",
+        "update-points": "node prisma/update-points.js"
+    },
+    "devDependencies": {
+        "@tailwindcss/vite": "^4.0.0",
+        "@types/node": "^25.9.1",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^3.1",
+        "prisma": "^7.8.0",
+        "tailwindcss": "^4.0.0",
+        "vite": "^8.0.0"
+    },
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "<p align=\"center\"><a href=\"https://laravel.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\" alt=\"Laravel Logo\"></a></p>",
+    "main": "vite.config.js",
+    "directories": {
+        "test": "tests"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@neondatabase/serverless": "^1.1.0",
+        "@prisma/adapter-neon": "^7.8.0",
+        "@prisma/client": "^7.8.0",
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
+        "multer": "^2.1.1",
+        "ws": "^8.21.0"
+    }
+}

@@ -1,0 +1,83 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  RESELLER
+  CUSTOMER
+}
+
+enum FulfillmentMethod {
+  SHIPPING
+  PICKUP
+}
+
+enum OrderStatus {
+  UNPAID
+  PAID
+  PROCESSING
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  phone     String   @unique
+  role      Role     @default(CUSTOMER)
+  points    Int      @default(0)
+  orders    Order[]  @relation("ResellerOrders")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id          String    @id @default(uuid())
+  name        String
+  category    String
+  description String?
+  imageUrl    String?
+  variants    Variant[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Variant {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size      String
+  stock     Int      @default(0)
+  price     Float
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id                 String            @id @default(uuid())
+  invoiceNo          String            @unique
+  secureBarcodeToken String            @unique
+  resellerId         String?
+  reseller           User?             @relation("ResellerOrders", fields: [resellerId], references: [id], onDelete: SetNull)
+  variantId          String
+  variant            Variant           @relation(fields: [variantId], references: [id])
+  quantity           Int               @default(1)
+  totalPrice         Int
+  shippingCost       Int               @default(0)
+  fulfillmentMethod  FulfillmentMethod
+  shippingAddress    Json?
+  status             OrderStatus       @default(UNPAID)
+  resiNo             String?
+  barcodeUsed        Boolean           @default(false)
+  customerName       String
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+}
