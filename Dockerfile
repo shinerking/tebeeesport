@@ -12,7 +12,8 @@ RUN apk add --no-cache \
     git \
     oniguruma-dev
 
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN apk add --no-cache postgresql-dev
+RUN docker-php-ext-install pdo_pgsql pgsql pdo_mysql mbstring exif pcntl bcmath gd
 
 # Ambil Composer versi terbaru
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -33,4 +34,4 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 EXPOSE 8080
 
 # Jalankan server Laravel
-CMD php artisan serve --host=0.0.0.0 --port=8080
+CMD php artisan config:clear && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8080
