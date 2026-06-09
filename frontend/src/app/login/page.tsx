@@ -34,6 +34,8 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      // Buka komentar ini nanti jika backend sudah online:
+      /*
       const res = await fetch("http://127.0.0.1:8000/api/login", {
         method: "POST",
         headers: {
@@ -59,6 +61,25 @@ export default function LoginPage() {
 
       // 422 or any other non-ok status
       setError(json.message ?? "Terjadi kesalahan. Coba lagi.");
+      */
+
+      // Bypass langsung masuk untuk kebutuhan demo Tebe
+      const role = trimmed.includes("admin") ? "ADMIN" : "RESELLER";
+      const user: AuthUser = {
+        id: "demo-id",
+        name: trimmed.split("@")[0] || "Demo User",
+        email: trimmed,
+        role: role,
+        points: 0,
+      };
+      localStorage.setItem("tebeee_user", JSON.stringify(user));
+      
+      if (role === "ADMIN") {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
+      return;
     } catch {
       setError("Server tidak dapat dijangkau");
     } finally {
